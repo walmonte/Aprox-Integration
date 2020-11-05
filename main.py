@@ -2,19 +2,12 @@
 import tkinter as tk
 from tkinter import messagebox
 from math import pow, cos, pi
-from aproximation_rules import mid_rule, trap_rule, simpsons_rule
+import aproximation_rules
 
-my_func = ''
-interval = [] # x values between which we want to calculate the area (usually refered as 'a' and 'b')
-n = 0 #  number of rectangles/partitions
-
-def f_of_x(x_values):
+def f_of_x(endpoints):
     # TODO: take a function from the user
-    result = []
-    for i in range(0, len(x_values)):
-        x = x_values[i]
-        result.append( pow(1+(cos(x)), 1/3) )
-    
+    result = [ (pow(1+(cos(i)), 1./3)) for i in endpoints]
+
     return result
 
 # GUI------------------------------------------------------------------
@@ -45,6 +38,10 @@ def prompt_error():
     clear_entries()
 
 def compute(): 
+
+    my_func = ''
+    interval = [] # x values between which we want to calculate the area (usually refered as 'a' and 'b')
+    n = 0 #  number of rectangles/partitions
    
     try:
         my_func = func_entry.get()
@@ -53,7 +50,7 @@ def compute():
         for word in (interval_entry.get()).split(','):
             if word.isdigit():
                 interval.append(int(word))
-        print('inetrval ok') 
+        print('interval ok') 
         n = n_entry.get()
         n = int(n)
 
@@ -61,10 +58,9 @@ def compute():
             prompt_error()
     except:
         prompt_error()
-    
-    m = round(mid_rule(n, interval, f_of_x), 6)
-    t = round(trap_rule(n, interval, f_of_x), 6)
-    s = round(simpsons_rule(n, interval, f_of_x), 6)
+
+    m, t, s = aproximation_rules.compute(n, interval, f_of_x)
+
     m_label2.configure(text=m)
     t_label2.configure(text=t)
     s_label2.configure(text=s)
@@ -160,7 +156,6 @@ s_label2.grid(row=6,column=1,sticky='W',pady=3, padx=2)
 #calc_frame.grid()
 #frame.grid()
 instructions_label.grid(row=0,column=0, sticky='W', pady=5)
-
 
 # infinite loop for the window to display 
 calc_frame.mainloop() 
