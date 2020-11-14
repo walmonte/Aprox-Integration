@@ -1,6 +1,25 @@
 import numpy as np
+from math import *
 
-def mid_rule(interval, my_func, delta_x):
+def f_of_x(func_str, endpoints):
+    ''' User-entered Function
+
+    Takes a mathematical expression as string and computes its result
+
+    Args:
+        func_str (string)     : the function to be analized [f(x)]
+        endpoints (float list): coordinates of the partitions
+    
+    Returns:
+        A new list of endpoints
+    '''
+    
+    #result = [ (pow(1+(cos(i)), 1./3)) for i in endpoints]
+    result = [ eval(func_str) for x in endpoints]
+
+    return result
+
+def mid_rule(interval, delta_x, f_of_x, func_str):
     ''' Midpoint Rule of Integration
 
     Approximates the area between a given curve f(x) and the line x=0 within a closed interval [a,b] using the Midpiont Rule
@@ -16,7 +35,7 @@ def mid_rule(interval, my_func, delta_x):
     '''
     endpoints = [ (.5* ( (i-delta_x) + i)) for i in np.arange(interval[0]+delta_x, interval[1]+delta_x, delta_x)]
 
-    endpoints = my_func(endpoints)
+    endpoints = f_of_x(func_str, endpoints)
     result = np.sum(endpoints)
     result *= delta_x
     
@@ -79,8 +98,18 @@ def simpsons_rule(interval, delta_x, endpoints):
 
     return result
 
-def compute(n, interval, my_func):
-    '''
+def compute(n, interval, func_str):
+    ''' Main function
+
+    Controls the flow of information on the file; helps minimize redundant functionalities.
+
+    Args:
+        n (int)            : number of partitions
+        interval (int list): [a,b]
+        func_str (str)     : string version of the formula entered by the user.
+    
+    Returns:
+        The area under the cruve and within the interval using all three methods of approximate integration
     '''
 
     delta_x = (interval[1] - interval[0])/n
@@ -88,10 +117,11 @@ def compute(n, interval, my_func):
     # Bescause two different rules use the same set on endpoints, delegate this computation, so it only happens once.
     endpts = [ i for i in np.arange(interval[0], interval[1] + delta_x, delta_x)]
 
-    endpts = my_func(endpts)
+    #enpoints_max = fofx2(my_func, endpts)
+    endpts = f_of_x(func_str, endpts)
     endpts_copy = endpts.copy()
 
-    by_midpoint = round(mid_rule(interval, my_func, delta_x), 6)
+    by_midpoint = round(mid_rule(interval, delta_x, f_of_x, func_str), 6)
     by_trapezoidal = round(trap_rule(interval, delta_x, endpts), 6)
     by_simpsons = round(simpsons_rule(interval, delta_x, endpts_copy), 6)   
 
