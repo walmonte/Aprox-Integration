@@ -1,2 +1,2 @@
 # Aprox-Integration
-This app calculates the aproximate area under a curve f(x) within a closed intereval [a,b] uisng different Aproximate Integration Rules.
+This app uses three different rules of Approxiamte Integration to calculate the aproximate area under a given function f(x) within a closed intereval [a,b]. 
